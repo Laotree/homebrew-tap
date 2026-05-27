@@ -1,9 +1,9 @@
 class Llp < Formula
   desc "Read Claude Code session JSONL files and persist them to a local SQLite database"
   homepage "https://github.com/Laotree/logs-locally-plugin"
-  url "https://github.com/Laotree/logs-locally-plugin.git",
-      tag: "v0.2.1",
-      revision: "0f149468eba076e9806f0192fc622534e6282dda"
+  url "https://github.com/Laotree/logs-locally-plugin/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "021efaf0adc295869531913ea2d5f0d459d67ae6be32006cd61e91ab4ae0bdbd"
+  version "0.3.0"
   license "MIT"
 
   depends_on "rust" => :build
