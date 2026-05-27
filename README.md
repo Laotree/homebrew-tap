@@ -57,3 +57,59 @@ Repository: [logs-locally-plugin](https://github.com/Laotree/logs-locally-plugin
 ```bash
 brew install Laotree/homebrew-tap/llp
 ```
+
+---
+
+## Auto-Deploy
+
+When a new tag is pushed to any source repo, the Homebrew formula is updated
+automatically via the [`update-formula`](.github/workflows/update-formula.yml)
+GitHub Actions workflow in this tap.
+
+### How it works
+
+1. A release workflow in the source repo calls `gh workflow run` (or sends a
+   `repository_dispatch` event) to this tap, passing the formula name and new
+   version.
+2. The tap workflow downloads the release assets, computes their SHA-256
+   checksums, updates the relevant `.rb` formula, and commits straight to
+   `main`.
+
+### Setup in each source repo
+
+1. Create a [Fine-Grained PAT](https://github.com/settings/tokens) scoped to
+   `Laotree/homebrew-tap` with **Contents: Read & Write** and **Actions: Write**
+   permissions. Store it as a secret named `HOMEBREW_TAP_TOKEN` in the source
+   repo.
+
+2. Add the following workflow (adjust `formula` to match the repo):
+
+```yaml
+# .github/workflows/release.yml  (add this job, or append to an existing one)
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  notify-tap:
+    runs-on: ubuntu-latest
+    needs: [build]          # run after your build/publish job if you have one
+    steps:
+      - name: Trigger Homebrew tap update
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"   # strip leading 'v'
+          gh workflow run update-formula.yml \
+            --repo Laotree/homebrew-tap \
+            --field formula=<FORMULA_NAME> \
+            --field version="$VERSION"
+```
+
+Replace `<FORMULA_NAME>` with one of: `verify-networking`, `session-score-plugin`, `llp`.
+
+The workflow can also be triggered manually from the
+[Actions tab](../../actions/workflows/update-formula.yml) of this tap repo.

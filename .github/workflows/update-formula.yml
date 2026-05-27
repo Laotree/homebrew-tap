@@ -1,0 +1,65 @@
+name: Update Formula
+
+# Triggered two ways:
+#   1. workflow_dispatch – manual or from a source-repo release workflow via
+#      `gh workflow run update-formula.yml --repo Laotree/homebrew-tap …`
+#   2. repository_dispatch – source repo POSTs an event with client_payload
+#      { "formula": "llp", "version": "0.3.0" }
+
+on:
+  workflow_dispatch:
+    inputs:
+      formula:
+        description: 'Formula to update'
+        required: true
+        type: choice
+        options:
+          - verify-networking
+          - session-score-plugin
+          - llp
+      version:
+        description: 'New version (e.g. 0.3.0 or v0.3.0)'
+        required: true
+        type: string
+
+  repository_dispatch:
+    types: [update-formula]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Normalise inputs regardless of which trigger fired
+      - name: Resolve inputs
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "formula=${{ github.event.client_payload.formula }}" >> "$GITHUB_OUTPUT"
+            echo "version=${{ github.event.client_payload.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "formula=${{ inputs.formula }}"   >> "$GITHUB_OUTPUT"
+            echo "version=${{ inputs.version }}"   >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update formula
+        run: |
+          python3 scripts/update_formula.py \
+            "${{ steps.vars.outputs.formula }}" \
+            "${{ steps.vars.outputs.version }}"
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/
+          if git diff --cached --quiet; then
+            echo "Formula already up-to-date — nothing to commit."
+          else
+            git commit -m "chore: bump ${{ steps.vars.outputs.formula }} to v$(echo '${{ steps.vars.outputs.version }}' | sed 's/^v//')"
+            git push
+          fi
