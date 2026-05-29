@@ -50,7 +50,7 @@ brew install Laotree/homebrew-tap/session-score-plugin
 
 Read Claude Code session JSONL files and persist them to a local SQLite database.
 
-Built from source on all platforms; requires Rust as a build dependency — Homebrew installs Rust automatically if needed.
+Distributed as a pre-built, stripped binary (macOS ARM64/x86_64, Linux x86_64) — no build dependencies required.
 
 Repository: [logs-locally-plugin](https://github.com/Laotree/logs-locally-plugin)
 
