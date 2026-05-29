@@ -41,10 +41,20 @@ FORMULAS: dict[str, dict] = {
     },
     "llp": {
         "file": "Formula/llp.rb",
-        "type": "source",
-        "url": (
+        "type": "binary",
+        # Prebuilt, stripped binaries attached to the GitHub Release by
+        # logs-locally-plugin's release-binaries.yml workflow.
+        "arm64_macos_url": (
             "https://github.com/Laotree/logs-locally-plugin"
-            "/archive/refs/tags/v{v}.tar.gz"
+            "/releases/download/v{v}/llp-aarch64-apple-darwin.tar.gz"
+        ),
+        "x86_64_macos_url": (
+            "https://github.com/Laotree/logs-locally-plugin"
+            "/releases/download/v{v}/llp-x86_64-apple-darwin.tar.gz"
+        ),
+        "x86_64_linux_url": (
+            "https://github.com/Laotree/logs-locally-plugin"
+            "/releases/download/v{v}/llp-x86_64-unknown-linux-gnu.tar.gz"
         ),
     },
 }
@@ -112,30 +122,46 @@ def update_dual(version: str, cfg: dict) -> None:
     path.write_text(text)
 
 
-def update_source(version: str, cfg: dict) -> None:
-    """llp — source tarball for all platforms; rewrite to canonical tarball form."""
-    url = cfg["url"].format(v=version)
-    sha = sha256_of_url(url)
+def update_binary(version: str, cfg: dict) -> None:
+    """llp — prebuilt stripped binary per platform; no from-source build."""
+    arm64_macos_url  = cfg["arm64_macos_url"].format(v=version)
+    x86_64_macos_url = cfg["x86_64_macos_url"].format(v=version)
+    x86_64_linux_url = cfg["x86_64_linux_url"].format(v=version)
+    arm64_macos_sha  = sha256_of_url(arm64_macos_url)
+    x86_64_macos_sha = sha256_of_url(x86_64_macos_url)
+    x86_64_linux_sha = sha256_of_url(x86_64_linux_url)
 
-    # Rewrite the whole formula so it uses a clean tarball stanza
-    # (migrating away from the git-revision approach used in v0.2.0)
     new_content = (
         'class Llp < Formula\n'
         '  desc "Read Claude Code session JSONL files and persist them to a local SQLite database"\n'
         '  homepage "https://github.com/Laotree/logs-locally-plugin"\n'
-        f'  url "{url}"\n'
-        f'  sha256 "{sha}"\n'
         f'  version "{version}"\n'
         '  license "MIT"\n'
         '\n'
-        '  depends_on "rust" => :build\n'
+        '  on_macos do\n'
+        '    on_arm do\n'
+        f'      url "{arm64_macos_url}"\n'
+        f'      sha256 "{arm64_macos_sha}"\n'
+        '    end\n'
+        '    on_intel do\n'
+        f'      url "{x86_64_macos_url}"\n'
+        f'      sha256 "{x86_64_macos_sha}"\n'
+        '    end\n'
+        '  end\n'
+        '\n'
+        '  on_linux do\n'
+        '    on_intel do\n'
+        f'      url "{x86_64_linux_url}"\n'
+        f'      sha256 "{x86_64_linux_sha}"\n'
+        '    end\n'
+        '  end\n'
         '\n'
         '  def install\n'
-        '    system "cargo", "install", *std_cargo_args\n'
+        '    bin.install "llp"\n'
         '  end\n'
         '\n'
         '  test do\n'
-        '    assert_match version.to_s, shell_output("#{bin}/llp --version")\n'
+        '    assert_match version.to_s, shell_output("#{bin}/llp version")\n'
         '  end\n'
         'end\n'
     )
@@ -145,7 +171,7 @@ def update_source(version: str, cfg: dict) -> None:
 UPDATERS = {
     "single": update_single,
     "dual":   update_dual,
-    "source": update_source,
+    "binary": update_binary,
 }
 
 # ── Main ───────────────────────────────────────────────────────────────────────
