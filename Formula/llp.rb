@@ -1,24 +1,24 @@
 class Llp < Formula
   desc "Read Claude Code session JSONL files and persist them to a local SQLite database"
   homepage "https://github.com/Laotree/logs-locally-plugin"
-  version "0.9.0"
+  version "0.9.1"
   license "MIT"
 
   on_macos do
     on_arm do
-      url "https://github.com/Laotree/logs-locally-plugin/releases/download/v0.9.0/llp-aarch64-apple-darwin.tar.gz"
-      sha256 "1be8e92500b34c13f3fbee8fcc5ad908cc4bea53b16247baabb6d271f1385345"
+      url "https://github.com/Laotree/logs-locally-plugin/releases/download/v0.9.1/llp-aarch64-apple-darwin.tar.gz"
+      sha256 "5492a50be0066764545669afa00d0801240aaaac56d1d428c89d2c5697399c50"
     end
     on_intel do
-      url "https://github.com/Laotree/logs-locally-plugin/releases/download/v0.9.0/llp-x86_64-apple-darwin.tar.gz"
-      sha256 "1ee938867f20948732b790a74687df2af3f489afeae17f40932f6a5361b07c02"
+      url "https://github.com/Laotree/logs-locally-plugin/releases/download/v0.9.1/llp-x86_64-apple-darwin.tar.gz"
+      sha256 "a1c130409f5b75ccc00078872888c3b018508a733eb9fd81a2d2ca272155e5ab"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/Laotree/logs-locally-plugin/releases/download/v0.9.0/llp-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "c449799ba15ba1bc11cd9f47f166201a1d132a3db008518ae509c692167677a4"
+      url "https://github.com/Laotree/logs-locally-plugin/releases/download/v0.9.1/llp-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "0dd9ee30b8fe7ad01bc00c4d4212c38113579afebb41abee1f0b1c2b31307c59"
     end
   end
 
