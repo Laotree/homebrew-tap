@@ -8,6 +8,18 @@ Homebrew tap for tools and plugins from [Laotree](https://github.com/Laotree).
 brew tap Laotree/homebrew-tap
 ```
 
+## Casks
+
+| Cask | Version | Description |
+|---|---|---|
+| [onley](#onley) | v0.2.2 | Local file deduplication desktop app |
+
+```bash
+brew install --cask laotree/tap/onley
+```
+
+---
+
 ## Formulas
 
 | Formula | Version | Description |
@@ -15,6 +27,19 @@ brew tap Laotree/homebrew-tap
 | [verify-networking](#verify-networking-v010) | v0.1.0 | Network connectivity checker for Claude Code/Codex sessions |
 | [session-score-plugin](#session-score-plugin-v010) | v0.1.0 | Score and analyse Claude Code sessions |
 | [llp](#llp-logs-locally-plugin-v020) | v0.2.0 | Persist Claude Code session logs to SQLite |
+
+---
+
+### onley (v0.2.2)
+
+Local file deduplication desktop app. The cask installs `Onley.app` from the
+public GitHub release; the package is unsigned and not notarized.
+
+Repository: [onley](https://github.com/fdaio/onley)
+
+```bash
+brew install --cask laotree/tap/onley
+```
 
 ---
 
