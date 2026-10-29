@@ -12,7 +12,7 @@ brew tap Laotree/homebrew-tap
 
 | Cask | Version | Description |
 |---|---|---|
-| [onley](#onley) | v0.2.3 | Local file deduplication desktop app |
+| [onley](#onley) | v0.2.4 | Local file deduplication desktop app |
 
 ```bash
 brew install --cask laotree/tap/onley
@@ -30,7 +30,7 @@ brew install --cask laotree/tap/onley
 
 ---
 
-### onley (v0.2.3)
+### onley (v0.2.4)
 
 Local file deduplication desktop app. The cask installs `Onley.app` from the
 public GitHub release; the package is unsigned and not notarized.
