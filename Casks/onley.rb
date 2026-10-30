@@ -1,9 +1,9 @@
 cask "onley" do
   arch arm: "arm64", intel: "x64"
 
-  version "0.2.9"
-  sha256 arm:   "3e85036eb86f49f8cd55a951183d1018589a5bd32ad476a97b8c9713bcc7fc7c",
-         intel: "dda262c1569078f70cedd9c89ea53916e61cca3e140cad3971b55d82311dfcdd"
+  version "0.2.10"
+  sha256 arm:   "5e8f4f5f62dd68f435b4a8c0693377e9d67231a3b6c22c1654549b3905d43cb7",
+         intel: "1115be8663517c2560bd6d1f0a1efc8f225d3e4e49f80f33f938598b46dccc68"
 
   url "https://github.com/fdaio/onley/releases/download/v#{version}/onley-desktop_v#{version}_macos_#{arch}.zip"
   name "Onley"
